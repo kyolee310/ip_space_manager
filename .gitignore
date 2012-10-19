@@ -1,0 +1,6 @@
+## CONFIG FILE ##
+*.ini
+
+## LOG FILE ##
+*.log
+
