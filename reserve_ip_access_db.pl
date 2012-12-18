@@ -31,7 +31,7 @@ sub init_db{
 	my $pw = "";
 
 	# READ IP SPACE MANAGER CONFIGURATION FILE
-	my $config_file = "/home/qa-server/lib/ip_space_manager/var/ip_space_manager.ini";
+	my $config_file = "/home/qa-group/ip_space_manager/var/ip_space_manager.ini";
 	my $line;
 	open(CONFIG, "< $config_file") or die $!;
 	while($line = <CONFIG>){

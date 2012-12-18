@@ -21,8 +21,8 @@
 
 use strict;
 
-$ENV{'TEST_HOME'} = "/home/qa-server";
-$ENV{'THIS_HOME'} = $ENV{'TEST_HOME'} . "/lib/ip_space_manager";
+$ENV{'TEST_HOME'} = "/home/qa-group";
+$ENV{'THIS_HOME'} = $ENV{'TEST_HOME'} . "/ip_space_manager";
 $ENV{'RANGE_HOME'} = $ENV{'THIS_HOME'} . "/etc";
 
 require "$ENV{'THIS_HOME'}/reserve_ip_access_db.pl";
@@ -153,7 +153,7 @@ sub populate_managed_ip_data{
 		my $byte_offset = $second_byte;
 
 		for(my $i=$byte_offset; $i< 256 && $is_done == 0; $i=$i+$inc){
-			$this_ip = "192.168." . sprintf("%d", $first_byte) . "." . sprintf("%d", $i);			
+			$this_ip = "10.111." . sprintf("%d", $first_byte) . "." . sprintf("%d", $i);			
 			push(@ip_array, $this_ip);
 			$ip_hash{$this_ip} = $count;
 			$count++;

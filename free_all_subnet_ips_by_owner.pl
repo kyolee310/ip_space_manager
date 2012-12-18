@@ -21,8 +21,8 @@
 
 use strict;
 
-$ENV{'TEST_HOME'} = "/home/qa-server";
-$ENV{'THIS_HOME'} = $ENV{'TEST_HOME'} . "/lib/ip_space_manager";
+$ENV{'TEST_HOME'} = "/home/qa-group";
+$ENV{'THIS_HOME'} = $ENV{'TEST_HOME'} . "/ip_space_manager";
 $ENV{'LOG_HOME'} = $ENV{'THIS_HOME'} . "/log";
 
 require "$ENV{'THIS_HOME'}/reserve_ip_access_db.pl";
@@ -96,7 +96,7 @@ sub get_all_ips_by_owner{
 
 	my $owner = shift @_;
 
-	my $temp_list = `perl /home/qa-server/lib/ip_space_manager/get_all_subnet_ips_by_owner.pl $owner`;
+	my $temp_list = `perl /home/qa-group/ip_space_manager/get_all_subnet_ips_by_owner.pl $owner`;
 
 	my $ip_list = "NULL";
 	if( $temp_list =~ /^\[IPs\]\s+(.+)/m ){
@@ -112,7 +112,7 @@ sub free_all_ips{
 
 	my $ip_list = shift @_;
 	chomp($ip_list);
-	system("perl /home/qa-server/lib/ip_space_manager/free_subnet_ip.pl $ip_list");
+	system("perl /home/qa-group/ip_space_manager/free_subnet_ip.pl $ip_list");
 
 	return 0;
 };

@@ -21,8 +21,8 @@
 
 use strict;
 
-$ENV{'TEST_HOME'} = "/home/qa-server";
-$ENV{'THIS_HOME'} = $ENV{'TEST_HOME'} . "/lib/ip_space_manager";
+$ENV{'TEST_HOME'} = "/home/qa-group";
+$ENV{'THIS_HOME'} = $ENV{'TEST_HOME'} . "/ip_space_manager";
 $ENV{'LOG_HOME'} = $ENV{'THIS_HOME'} . "/log";
 
 
