@@ -56,19 +56,35 @@ sub read_config_file{
 	return 0;
 };
 
+sub print_time{
+	my ($sec,$min,$hour,$mday,$mon,$year,$wday, $yday,$isdst)=localtime(time);
+	my $this_time = sprintf "[%4d-%02d-%02d %02d:%02d:%02d]", $year+1900,$mon+1,$mday,$hour,$min,$sec;
+	return $this_time;
+};
+
+sub print_log_space{
+	system("echo \"\" >> $LOGFILE");
+	return 0;
+};
 
 sub print_output{
 	my $str = shift @_;
-	print "[GET_ALL_OPEN_MANAGED_IPS]\t" . $str . "\n";
+	my $ts = print_time();
+	my $outstr = "$ts [REQUEST_OPEN_MANAGED_IP] [LOG]\t" . $str;
+	print $outstr . "\n";
+	system("echo \"$outstr\" >> $LOGFILE");
 	return 0;
 };
 
 sub print_error{
 	my $str = shift @_;
-	print "[ERROR]\t" . $str . "\n";
+	my $ts = print_time();
+	my $outstr = "$ts [REQUEST_OPEN_MANAGED_IP] [ERROR]\t" . $str;
+	print $outstr . "\n";
+	system("echo \"$outstr\" >> $LOGFILE");
+	print_log_space();
 	exit(1);
 };
-
 
 ####################################  MAIN  ##########################################
 
@@ -122,7 +138,7 @@ while( $is_conflict == 1 && $trial < 3 ){
 	}
 };
 
-
+print_log_space();
 
 exit(0);
 
