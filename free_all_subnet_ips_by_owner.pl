@@ -21,16 +21,32 @@
 
 use strict;
 
-$ENV{'TEST_HOME'} = "/home/qa-group";
-$ENV{'THIS_HOME'} = $ENV{'TEST_HOME'} . "/ip_space_manager";
-$ENV{'LOG_HOME'} = $ENV{'THIS_HOME'} . "/log";
-
-require "$ENV{'THIS_HOME'}/reserve_ip_access_db.pl";
+require "./reserve_ip_access_db.pl";
 
 my $MYTABLE = "reserve_subnet_ip_records";
 
-my $LOGFILE = $ENV{'LOG_HOME'} . "/history_reserve_subnet_ip.log";
+my $THIS_HOME = "/home/qa-group/ip_space_manager";
+my $LOG_HOME = $THIS_HOME . "/log";
+my $LOGFILE = $LOG_HOME . "/history_reserve_subnet_ip.log";
 
+sub read_config_file{
+	### READ CONFIGURATION FILE
+	my $config_file = "./var/ip_space_manager.ini";
+	my $line;
+	open(CONFIG, "< $config_file") or die $!;
+	while($line = <CONFIG>){
+		chomp($line);
+		if( $line =~ /^HOME_DIR:\s(\S+)/ ){
+			$THIS_HOME = $1;
+			$LOG_HOME = $THIS_HOME . "/log";
+			$LOGFILE = $LOG_HOME . "/history_reserve_subnet_ip.log";
+			if( !(-e $LOG_HOME) ){
+				system("mkdir -p $LOG_HOME");
+			};
+		};
+	};
+	return 0;
+};
 
 sub print_time{
 	my ($sec,$min,$hour,$mday,$mon,$year,$wday, $yday,$isdst)=localtime(time);
@@ -69,9 +85,9 @@ if( @ARGV < 1 ){
 	print_error("USAGE : ./free_all_subnet_ips_by_owner.pl <OWNER>");
 };
 
+read_config_file();
 
 my $owner = shift @ARGV;
-
 
 print_output("OWNER: $owner");
 
@@ -96,7 +112,7 @@ sub get_all_ips_by_owner{
 
 	my $owner = shift @_;
 
-	my $temp_list = `perl /home/qa-group/ip_space_manager/get_all_subnet_ips_by_owner.pl $owner`;
+	my $temp_list = `perl ./get_all_subnet_ips_by_owner.pl $owner`;
 
 	my $ip_list = "NULL";
 	if( $temp_list =~ /^\[IPs\]\s+(.+)/m ){
@@ -112,7 +128,7 @@ sub free_all_ips{
 
 	my $ip_list = shift @_;
 	chomp($ip_list);
-	system("perl /home/qa-group/ip_space_manager/free_subnet_ip.pl $ip_list");
+	system("perl ./free_subnet_ip.pl $ip_list");
 
 	return 0;
 };

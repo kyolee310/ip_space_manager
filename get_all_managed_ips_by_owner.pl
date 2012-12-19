@@ -21,14 +21,9 @@
 
 use strict;
 
-$ENV{'TEST_HOME'} = "/home/qa-group";
-$ENV{'THIS_HOME'} = $ENV{'TEST_HOME'} . "/ip_space_manager";
-
-require "$ENV{'THIS_HOME'}/reserve_ip_access_db.pl";
-
+require "./reserve_ip_access_db.pl";
 
 my $MYTABLE = "reserve_managed_ip_records";
-
 
 sub print_output{
 	my $str = shift @_;

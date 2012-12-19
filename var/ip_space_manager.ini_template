@@ -2,3 +2,7 @@
 DATABASE: <database_host>
 USERNAME: <username>
 PASSWORD: <password>
+
+[DIRECTORY]
+HOME_DIR: <home_directory>
+

@@ -21,15 +21,40 @@
 
 use strict;
 
-$ENV{'TEST_HOME'} = "/home/qa-group";
-$ENV{'THIS_HOME'} = $ENV{'TEST_HOME'} . "/ip_space_manager";
-$ENV{'RANGE_HOME'} = $ENV{'THIS_HOME'} . "/etc";
-
-require "$ENV{'THIS_HOME'}/reserve_ip_access_db.pl";
+require "./reserve_ip_access_db.pl";
 
 my $MYTABLE = "reserve_subnet_ip_records";
-my $RANGEFILE = $ENV{'RANGE_HOME'} . "/range_subnet_ip.lst";
 
+my $THIS_HOME = "/home/qa-group/ip_space_manager";
+my $LOG_HOME = $THIS_HOME . "/log";
+my $LOGFILE = $LOG_HOME. "/history_reserve_subnet_ip.log";
+
+my $RANGE_HOME = $THIS_HOME . "/etc";
+my $RANGEFILE = $RANGE_HOME . "/range_subnet_ip.lst";
+
+sub read_config_file{
+	### READ CONFIGURATION FILE
+	my $config_file = "./var/ip_space_manager.ini";
+	my $line;
+	open(CONFIG, "< $config_file") or die $!;
+	while($line = <CONFIG>){
+		chomp($line);
+		if( $line =~ /^HOME_DIR:\s(\S+)/ ){
+			$THIS_HOME = $1;
+			$LOG_HOME = $THIS_HOME . "/log";
+			$LOGFILE = $LOG_HOME . "/history_reserve_subnet_ip.log";
+			if( !(-e $LOG_HOME) ){
+				system("mkdir -p $LOG_HOME");
+			};
+			$RANGE_HOME = $THIS_HOME . "/etc";
+			$RANGEFILE = $RANGE_HOME . "/range_subnet_ip.lst";
+			if( !(-e $RANGE_HOME) ){
+                                system("mkdir -p $RANGE_HOME");
+                        };
+		};
+	};
+	return 0;
+};
 
 sub print_output{
 	my $str = shift @_;
@@ -49,6 +74,8 @@ sub print_error{
 if( @ARGV < 2 ){
 	print_error("USAGE : ./request_open_subnet_ips.pl <owner> <count>");
 };
+
+read_config_file();
 
 my $owner = shift @ARGV;
 my $count = shift @ARGV;
@@ -70,7 +97,7 @@ read_range_and_populate();
 my $lastfreedip = get_most_recently_freed_ip();
 print_output("MOST RECENTLY FREED IP: $lastfreedip");
 
-$lastfreedip = "10.29.240.0";		### FOR UNIT TESTING
+#$lastfreedip = "10.29.240.0";		### FOR UNIT TESTING
 
 my $is_conflict = 1;
 my $trial = 0;
@@ -229,7 +256,7 @@ sub reserve_open_ips{
 
 	if( $is_conflict == 1 ){
 		chop($reserved_ip_str);
-		system("perl $ENV{'THIS_HOME'}/free_subnet_ip.pl $reserved_ip_str");
+		system("perl ./free_subnet_ip.pl $reserved_ip_str");
 	};
 
 	return $is_conflict;
