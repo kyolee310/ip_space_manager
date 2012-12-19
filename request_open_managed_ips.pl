@@ -163,10 +163,14 @@ sub populate_managed_ip_data{
 
 	my $first_byte;
 	my $second_byte;
+	my $third_byte;
+	my $fourth_byte;
 
-	if( $start =~ /^\d+\.\d+\.(\d+)\.(\d+)/ ){
+	if( $start =~ /^(\d+)\.(\d+)\.(\d+)\.(\d+)/ ){
 		$first_byte = $1;
 		$second_byte = $2;
+		$third_byte = $3;
+		$fourth_byte = $4;
 	};
 
 	my $is_done = 0;
@@ -178,10 +182,10 @@ sub populate_managed_ip_data{
 			print_error("INFINITE LOOP!");
 		};
 
-		my $byte_offset = $second_byte;
+		my $byte_offset = $fourth_byte;
 
 		for(my $i=$byte_offset; $i< 256 && $is_done == 0; $i=$i+$inc){
-			$this_ip = "10.111." . sprintf("%d", $first_byte) . "." . sprintf("%d", $i);			
+			$this_ip = sprintf("%d", $first_byte) . "." . sprintf("%d", $second_byte) . "." . sprintf("%d", $third_byte) . "." . sprintf("%d", $i);			
 			push(@ip_array, $this_ip);
 			$ip_hash{$this_ip} = $count;
 			$count++;
@@ -189,8 +193,8 @@ sub populate_managed_ip_data{
 				$is_done = 1;
 			};
 		};
-		$first_byte++;
-		$second_byte = 0;
+		$third_byte++;
+		$fourth_byte = 0;
 	};
 
 	return 0;
